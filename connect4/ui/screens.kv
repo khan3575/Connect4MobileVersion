@@ -1,34 +1,423 @@
 #:kivy 2.1.0
+#:import Factory kivy.factory.Factory
+#:import rgba kivy.utils.get_color_from_hex
 
-<Cell>:
-    canvas:
-       
+<RoundedButton@Button>:
+    background_color: 0,0,0,0
+    background_normal: ''
+    canvas.before:
         Color:
-            rgba: .02, .05, .10, 1
-        Ellipse:
+            rgba: (0.3, 0.5, 0.9, 1) if self.state == 'normal' else (0.2, 0.4, 0.8, 1)
+        RoundedRectangle:
             pos: self.pos
             size: self.size
+            radius: [15,]
 
-     
-        Color:
-            rgba: .08, .12, .25, 1
-        Ellipse:
-            pos: self.x + 2, self.y + 2
-            size: self.width - 4, self.height - 4
-
+<CustomField@BoxLayout>:
+    orientation: 'vertical'
+    spacing: dp(5)
+    label_text: ''
+    hint_text: ''
+    is_password: False
+    value_text: text_input.text
+    text_input: text_input
+    
+    Label:
+        text: root.label_text
+        size_hint_y: 0.3
+        text_size: self.size
+        halign: 'left'
+        valign: 'bottom'
+        font_size: dp(14)
+        color: 0.9, 0.9, 1, 1
         
-        Color:
-            rgba: (1, .2, .2, 1) if self.player == 1 else (1, 1, .2, 1) if self.player == 2 else (0, 0, 0, 0)
-        Ellipse:
-            pos: self.x + self.width * .1, self.y + self.height * .1
-            size: self.width * .8, self.height * .8
+    TextInput:
+        id: text_input
+        hint_text: root.hint_text
+        password: root.is_password
+        multiline: False
+        size_hint_y: 0.7
+        padding: dp(10), dp(10)
+        background_color: 0.2, 0.2, 0.25, 1
+        foreground_color: 0.9, 0.9, 1, 1
+        hint_text_color: 0.5, 0.5, 0.6, 1
+        cursor_color: 0.9, 0.9, 1, 1
+        font_size: dp(16)
 
+<LoginScreen@Screen>:
+    name: 'LoginScreen'
+    canvas.before:
+        Color:
+            rgba: rgba('#1e1e2a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(30)
         
-        Color:
-            rgba: (1, 1, 1, .3) if self.player else (0, 0, 0, 0)
-        Ellipse:
-            pos: self.x + self.width * .15, self.y + self.height * .55
-            size: self.width * .3, self.height * .3
+        Label:
+            text: 'Connect 4'
+            font_size: dp(40)
+            size_hint_y: 0.2
+            color: 0.9, 0.4, 0.4, 1
+            bold: True
+            
+        Label:
+            text: 'LOGIN'
+            font_size: dp(24)
+            size_hint_y: 0.1
+            color: 0.9, 0.9, 1, 1
+        
+        CustomField:
+            id: username_field
+            label_text: 'Username'
+            hint_text: 'Enter your username'
+            size_hint_y: 0.15
+            
+        CustomField:
+            id: password_field
+            label_text: 'Password'
+            hint_text: 'Enter your password'
+            is_password: True
+            size_hint_y: 0.15
+            
+        Label:
+            id: err
+            text: ''
+            color: 0.9, 0.3, 0.3, 1
+            size_hint_y: 0.1
+            
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(15)
+            size_hint_y: 0.3
+            
+            RoundedButton:
+                text: 'Login'
+                font_size: dp(18)
+                size_hint_y: 0.5
+                on_release: app.do_login(username_field.value_text, password_field.value_text)
+                
+            Label:
+                text: 'Don\'t have an account?'
+                size_hint_y: 0.2
+                color: 0.7, 0.7, 0.8, 1
+                
+            RoundedButton:
+                text: 'Register New Account'
+                font_size: dp(16)
+                size_hint_y: 0.3
+                on_release: app.go_to_register()
 
-<GameGrid>:
-    # purely a container; touches handled in Python
+<RegisterScreen@Screen>:
+    name: 'RegisterScreen'
+    canvas.before:
+        Color:
+            rgba: rgba('#1e1e2a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(30)
+        
+        Label:
+            text: 'Connect 4'
+            font_size: dp(40)
+            size_hint_y: 0.2
+            color: 0.9, 0.4, 0.4, 1
+            bold: True
+            
+        Label:
+            text: 'CREATE ACCOUNT'
+            font_size: dp(24)
+            size_hint_y: 0.1
+            color: 0.9, 0.9, 1, 1
+        
+        CustomField:
+            id: username_field
+            label_text: 'Username'
+            hint_text: 'Choose a username'
+            size_hint_y: 0.15
+            
+        CustomField:
+            id: password_field
+            label_text: 'Password'
+            hint_text: 'Choose a password'
+            is_password: True
+            size_hint_y: 0.15
+            
+        Label:
+            id: err
+            text: ''
+            color: 0.9, 0.3, 0.3, 1
+            size_hint_y: 0.1
+            
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(15)
+            size_hint_y: 0.3
+            
+            RoundedButton:
+                text: 'Register'
+                font_size: dp(18)
+                size_hint_y: 0.5
+                on_release: app.do_register(username_field.value_text, password_field.value_text)
+                
+            Label:
+                text: 'Already have an account?'
+                size_hint_y: 0.2
+                color: 0.7, 0.7, 0.8, 1
+                
+            RoundedButton:
+                text: 'Back to Login'
+                font_size: dp(16)
+                size_hint_y: 0.3
+                on_release: app.go_to_login()
+
+<MenuScreen@Screen>:
+    name: 'MenuScreen'
+    canvas.before:
+        Color:
+            rgba: rgba('#1e1e2a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(30)
+        
+        Label:
+            text: 'Connect 4'
+            font_size: dp(40)
+            size_hint_y: 0.2
+            color: 0.9, 0.4, 0.4, 1
+            bold: True
+            
+        Label:
+            text: 'Welcome, [b]' + app.current_user + '[/b]'
+            font_size: dp(24)
+            size_hint_y: 0.15
+            color: 0.9, 0.9, 1, 1
+            markup: True
+            
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(15)
+            size_hint_y: 0.65
+            
+            RoundedButton:
+                text: 'Play Game'
+                font_size: dp(20)
+                size_hint_y: 0.25
+                on_release: app.go_to_game()
+                
+            RoundedButton:
+                text: 'My Stats'
+                font_size: dp(20)
+                size_hint_y: 0.25
+                on_release: app.go_to_stats()
+                
+            RoundedButton:
+                text: 'Log Out'
+                font_size: dp(20)
+                size_hint_y: 0.25
+                on_release: app.go_to_login()
+
+<GameScreen@Screen>:
+    name: 'GameScreen'
+    canvas.before:
+        Color:
+            rgba: rgba('#1e1e2a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(15)
+        spacing: dp(10)
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.12
+            spacing: dp(10)
+            
+            Label:
+                id: header
+                text: ''
+                font_size: dp(22)
+                color: 0.9, 0.9, 1, 1
+                bold: True
+                size_hint_x: 0.7
+                
+            RoundedButton:
+                text: 'Menu'
+                font_size: dp(16)
+                size_hint_x: 0.3
+                on_release: app.go_to_menu()
+        
+        GameGrid:
+            id: gamegrid
+            rows: 6
+            cols: 7
+            spacing: dp(6)
+            padding: dp(6)
+            app: app
+            size_hint_y: 0.88
+
+<StatsScreen@Screen>:
+    name: 'StatsScreen'
+    canvas.before:
+        Color:
+            rgba: rgba('#1e1e2a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(30)
+        
+        Label:
+            text: 'Connect 4'
+            font_size: dp(40)
+            size_hint_y: 0.2
+            color: 0.9, 0.4, 0.4, 1
+            bold: True
+            
+        Label:
+            text: 'Player Statistics'
+            font_size: dp(24)
+            size_hint_y: 0.1
+            color: 0.9, 0.9, 1, 1
+            
+        GridLayout:
+            cols: 2
+            size_hint_y: 0.4
+            spacing: dp(15)
+            padding: dp(20)
+            canvas.before:
+                Color:
+                    rgba: rgba('#252535')
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [15,]
+                    
+            Label:
+                text: 'Username:'
+                font_size: dp(18)
+                color: 0.7, 0.7, 0.8, 1
+                
+            Label:
+                text: app.current_user
+                font_size: dp(18)
+                color: 0.9, 0.9, 1, 1
+                bold: True
+                
+            Label:
+                text: 'Wins:'
+                font_size: dp(18)
+                color: 0.7, 0.7, 0.8, 1
+                
+            Label:
+                id: win_label
+                text: '0'
+                font_size: dp(18)
+                color: 0.3, 0.9, 0.3, 1
+                bold: True
+                
+            Label:
+                text: 'Losses:'
+                font_size: dp(18)
+                color: 0.7, 0.7, 0.8, 1
+                
+            Label:
+                id: loss_label
+                text: '0'
+                font_size: dp(18)
+                color: 0.9, 0.3, 0.3, 1
+                bold: True
+                
+            Label:
+                text: 'Win Rate:'
+                font_size: dp(18)
+                color: 0.7, 0.7, 0.8, 1
+                
+            Label:
+                id: win_rate_label
+                text: '0%'
+                font_size: dp(18)
+                color: 0.9, 0.9, 0.3, 1
+                bold: True
+                
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(15)
+            size_hint_y: 0.3
+            
+            RoundedButton:
+                text: 'Back to Menu'
+                font_size: dp(18)
+                size_hint_y: 0.6
+                on_release: app.go_to_menu()
+
+<WinPopup@Popup>:
+    size_hint: 0.8, 0.5
+    auto_dismiss: False
+    title: ''
+    title_size: dp(0)
+    separator_height: 0
+    background: ''
+    
+    canvas.before:
+        Color:
+            rgba: rgba('#1e1e2a')
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [15,]
+    
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(15)
+        padding: dp(20)
+        
+        Label:
+            id: win_title
+            text: 'Game Over'
+            font_size: dp(28)
+            color: 0.9, 0.9, 0.3, 1
+            bold: True
+            size_hint_y: 0.25
+            
+        Label:
+            id: win_message
+            text: 'Player X wins!'
+            font_size: dp(20)
+            color: 0.9, 0.9, 1, 1
+            size_hint_y: 0.5
+            
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(15)
+            size_hint_y: 0.25
+            
+            RoundedButton:
+                text: 'Play Again'
+                font_size: dp(18)
+                on_release: app.restart_game(); root.dismiss()
+                
+            RoundedButton:
+                text: 'Back to Menu'
+                font_size: dp(18)
+                on_release: app.go_to_menu(); root.dismiss()
