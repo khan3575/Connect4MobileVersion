@@ -1,0 +1,8 @@
+# Ignore the buildozer cache folder under connect4/
+connect4/.buildozer/
+
+# Ignore the bin/ folder under connect4/
+connect4/bin/
+
+# Ignore the environment folder in the project root
+.env/
