@@ -1,10 +1,10 @@
 [app]
 title = Connect 4 Game
 package.name = connect4game
-package.domain = org.yourname.connect4
+package.domain = org.sdp.connect4
 source.dir = .
 version = 0.1
-requirements = python3,kivy==2.1.0,pyjnius==1.6.1
+requirements = python3,kivy==2.2.0
 orientation = portrait
 
 [android]
