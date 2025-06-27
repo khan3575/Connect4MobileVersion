@@ -16,7 +16,6 @@ class GameGrid(GridLayout):
     def __init__(self, **kwargs):
         super(GameGrid, self).__init__(**kwargs)
         self.bind(pos=self.update_canvas, size=self.update_canvas)
-        Window.bind(mouse_pos=self.on_mouse_pos)
     
     def update_canvas(self, *args):
         self.canvas.before.clear()
@@ -33,25 +32,6 @@ class GameGrid(GridLayout):
                 Color(0.3, 0.3, 0.4, 1)
                 Rectangle(pos=(highlight_x, self.y), 
                           size=(col_width, self.height))
-    
-    def on_mouse_pos(self, window, pos):
-        if not self.get_root_window():
-            return
-            
-        # Convert the mouse position to local widget coordinates
-        rel_pos = self.to_widget(*pos)
-        
-        # Only process if mouse is over the widget
-        if self.collide_point(*rel_pos):
-            col_width = self.width / Board.COLS
-            new_hover_col = int((rel_pos[0] - self.x) / col_width)
-            
-            if new_hover_col != self.hover_col:
-                self.hover_col = new_hover_col
-                self.update_canvas()
-        elif self.hover_col != -1:
-            self.hover_col = -1
-            self.update_canvas()
 
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):

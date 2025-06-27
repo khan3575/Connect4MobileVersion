@@ -14,9 +14,6 @@ from game.board import Board
 from ui.cell import Cell
 from ui.grid import GameGrid
 
-# Set window size for testing
-Window.size = (420, 700)
-
 # Load the screens KV file
 Builder.load_file('ui/screens.kv')
 
@@ -134,7 +131,7 @@ ScreenManager:
     def start_game(self):
         self.board = Board()
         screen = self.root.get_screen('GameScreen')
-        screen.ids.header.text = f"Player {self.board.current}'s Turn"  # FIXED: Use ids.header
+        screen.ids.header.text = f"Player {self.board.current}'s Turn"
         self.cells = []  # Reset cells array
 
         # Clear any previous widgets
@@ -150,7 +147,7 @@ ScreenManager:
             self.cells.append(row_cells)
 
     def update_header(self):
-        self.root.get_screen('GameScreen').ids.header.text = f"Player {self.board.current}'s Turn"  # FIXED: Use ids.header
+        self.root.get_screen('GameScreen').ids.header.text = f"Player {self.board.current}'s Turn"
 
     def show_win(self, winner, winning_cells):
         # Update stats for the current user
